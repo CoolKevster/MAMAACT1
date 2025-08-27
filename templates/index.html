@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lanka Bazaar - Authentic Sri Lankan Treasures</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'sri-green': '#1a5d1a',
+            'sri-gold': '#d4af37',
+            'sri-red': '#b22222',
+            'sri-teal': '#008080',
+            'sri-earth': '#7e5e3c',
+            'custom-gray': '#f7f7f7',
+            'custom-dark': '#2c2c2c'
+          },
+          fontFamily: {
+            'serif': ['Playfair Display', 'serif'],
+            'sans': ['Inter', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f7f7f7;
+      color: #2c2c2c;
+    }
+
+    /* Transparent header styling */
+    .transparent-header {
+      background-color: transparent !important;
+      box-shadow: none !important;
+      color: white;
+    }
+
+    .transparent-header .nav-link,
+    .transparent-header .header-icon,
+    .transparent-header .logo {
+      color: white !important;
+    }
+
+    .transparent-header:hover {
+      background-color: white !important;
+      color: #2c2c2c;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05) !important;
+    }
+
+    .transparent-header:hover .nav-link,
+    .transparent-header:hover .header-icon,
+    .transparent-header:hover .logo {
+      color: #2c2c2c !important;
+    }
+
+    .scrolled-header {
+      background-color: white !important;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      color: #2c2c2c;
+    }
+
+    .scrolled-header .nav-link,
+    .scrolled-header .header-icon,
+    .scrolled-header .logo {
+      color: #2c2c2c !important;
+    }
+
+    /* Plus icon for add to cart */
+    .add-to-cart-btn {
+      position: absolute;
+      bottom: 15px;
+      right: 15px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      z-index: 10;
+      cursor: pointer;
+    }
+
+    .product-image-container:hover .add-to-cart-btn {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Carousel styling */
+    .carousel-slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .carousel-slide.active {
+      opacity: 1;
+    }
+
+    .carousel-control {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255, 255, 255, 0.7);
+      border: none;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      z-index: 10;
+    }
+
+    .carousel-control:hover {
+      background: rgba(255, 255, 255, 1);
+      transform: translateY(-50%) scale(1.1);
+    }
+
+    .carousel-prev {
+      left: 20px;
+    }
+
+    .carousel-next {
+      right: 20px;
+    }
+
+    .carousel-indicators {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+      z-index: 10;
+    }
+
+    .carousel-indicator {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.5);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .carousel-indicator.active {
+      background: white;
+      transform: scale(1.2);
+    }
+
+    /* Header hover effect */
+    .nav-link {
+      position: relative;
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 1px;
+      bottom: -4px;
+      left: 0;
+      background-color: #d4af37;
+      transition: width 0.3s ease;
+    }
+
+    .nav-link:hover::after {
+      width: 100%;
+    }
+
+    /* Minimal product cards */
+    .minimal-product-card {
+      transition: all 0.3s ease;
+      border: 1px solid rgba(0,0,0,0.05);
+      background: #fff;
+    }
+
+    .minimal-product-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    }
+
+    /* Collection header styling */
+    .collection-header {
+      position: relative;
+      padding-bottom: 15px;
+      margin-bottom: 30px;
+    }
+
+    .collection-header::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 60px;
+      height: 3px;
+      background: #1a5d1a;
+    }
+
+    /* Image highlight effect */
+    .image-container {
+      overflow: hidden;
+      border-radius: 12px;
+    }
+
+    .image-highlight {
+      transition: transform 0.5s ease, filter 0.5s ease;
+    }
+
+    .image-highlight:hover {
+      transform: scale(1.05);
+      filter: brightness(1.05);
+    }
+
+    /* Toast notification */
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: #1a5d1a;
+      color: white;
+      padding: 15px 25px;
+      border-radius: 8px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s ease;
+      z-index: 1000;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  </style>
+</head>
+
+<body class="bg-custom-gray text-custom-dark">
+  <!-- Transparent Header Navigation -->
+  <header class="transparent-header sticky top-0 z-50" id="main-header">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+      <div class="flex items-center">
+        <a href="index.html" class="flex items-center logo-container">
+          <div class="w-10 h-10 rounded-full bg-sri-green flex items-center justify-center mr-3">
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%23d4af37'/%3E%3Cpath d='M30,40 L50,20 L70,40 L60,50 L70,60 L50,80 L30,60 L40,50 Z' fill='%231a5d1a'/%3E%3C/svg%3E"
+                 alt="Lanka Bazaar Logo" class="w-6 h-6" />
+          </div>
+          <h1 class="text-xl font-bold text-gray-900 tracking-tight logo">LANKA BAZAAR</h1>
+        </a>
+      </div>
+
+      <nav>
+        <ul class="hidden md:flex gap-10 text-base font-medium text-gray-700">
+          <li><a href="index.html" class="nav-link hover:text-sri-green transition">Home</a></li>
+          <li><a href="mens.html" class="nav-link hover:text-sri-green transition">Men's</a></li>
+          <li><a href="womens.html" class="nav-link hover:text-sri-green transition">Women's</a></li>
+          <li><a href="bathik.html" class="nav-link hover:text-sri-green transition">Bathik</a></li>
+          <li><a href="#about" class="nav-link hover:text-sri-green transition">Our Story</a></li>
+          <li><a href="#contact" class="nav-link hover:text-sri-green transition">Contact</a></li>
+        </ul>
+        <div class="md:hidden text-xl">
+          <i class="fas fa-bars"></i>
+        </div>
+      </nav>
+
+      <div class="flex items-center gap-6">
+        <!-- Search Container -->
+        <div class="search-container">
+          <input type="text" placeholder="Search..." class="search-input">
+          <button id="search-toggle" class="text-gray-700 hover:text-sri-green header-icon">
+            <i class="fas fa-search"></i>
+          </button>
+        </div>
+
+        <a href="login.html" class="header-icon hover:text-sri-green">
+          <i class="fas fa-user"></i>
+        </a>
+        <a href="cart.html" class="header-icon hover:text-sri-green relative">
+          <i class="fas fa-shopping-cart"></i>
+          <span id="cart-count" class="absolute -top-2 -right-2 bg-sri-red text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">0</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast">
+    <i class="fas fa-check-circle mr-2"></i>
+    <span>Item added to cart!</span>
+  </div>
+
+  <!-- Minimal Hero Section - Carousel -->
+  <section class="relative h-[70vh]">
+    <div class="carousel w-full h-full relative">
+      <!-- Slide 1 -->
+      <div class="carousel-slide active" style="background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('https://images.unsplash.com/photo-1606760227091-3dd870d97f1d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1800&q=80');">
+        <div class="max-w-4xl mx-auto py-20 px-6 text-center w-full h-full flex flex-col justify-center items-center">
+          <h1 class="text-4xl md:text-5xl font-normal mb-6 font-serif tracking-tight text-white">Authentic Sri Lankan Treasures</h1>
+          <p class="text-lg mb-10 max-w-2xl mx-auto text-white">Exquisite traditional wear and handloom treasures - direct from Sri Lanka</p>
+          <div class="flex flex-col sm:flex-row justify-center gap-4">
+            <a href="#collections" class="bg-sri-gold text-sri-green px-8 py-3 rounded-sm font-medium">Explore Shop</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 2 -->
+      <div class="carousel-slide" style="background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('static/images/heritage_cottonM.png');">
+        <div class="max-w-4xl mx-auto py-20 px-6 text-center w-full h-full flex flex-col justify-center items-center">
+          <h1 class="text-4xl md:text-5xl font-normal mb-6 font-serif tracking-tight text-white">Handcrafted Heritage</h1>
+          <p class="text-lg mb-10 max-w-2xl mx-auto text-white">Generations of craftsmanship in every thread</p>
+          <div class="flex flex-col sm:flex-row justify-center gap-4">
+            <a href="bathik.html" class="bg-sri-gold text-sri-green px-8 py-3 rounded-sm font-medium">Discover Handloom Bathik</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 3 -->
+      <div class="carousel-slide" style="background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('static/images/Tea_image.jpg');">
+        <div class="max-w-4xl极 mx-auto py-20 px-6 text-center w-full h-full flex flex-col justify-center items-center">
+          <h1 class="text-4xl md:text-5xl font-normal mb-6 font-serif tracking-tight text-white">Timeless Elegance</h1>
+          <p class="text-lg mb-10 max-w-2xl mx-auto text-white">Traditional designs for modern sensibilities</p>
+          <div class="flex flex-col sm:flex-row justify-center gap-4">
+            <a href="womens.html" class="bg-sri-gold text-sri-green px-8 py-3 rounded-sm font-medium">Explore Women's</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <button class="carousel-control carousel-prev">
+        <i class="fas fa-chevron-left text-sri-green text-xl"></i>
+      </button>
+      <button class="carousel-control carousel-next">
+        <i class="fas fa-chevron-right text-sri-green text-xl"></i>
+      </button>
+
+      <!-- Indicators -->
+      <div class="carousel-indicators">
+        <div class="carousel-indicator active" data-slide="0"></div>
+        <div class="carousel-indicator" data-slide="1"></div>
+        <div class="carousel-indicator" data-slide="2"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Prominent Collections Section -->
+  <section id="collections" class="py-20">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-16">
+        <h2 class="collection-header text-4xl font-normal inline-block font-serif">Explore Our Collections</h2>
+        <p class="text-gray-600极 mt-4 max-w-2xl mx-auto">Discover the finest Sri Lankan craftsmanship in our curated collections</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+        <!-- Women's Sarees Category -->
+        <a href="womens.html" class="minimal-category h-96">
+          <div class="w-full h-full image-container">
+            <img src="https://images.unsplash.com/photo-1606760227091-3dd870d97f1d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlf极x8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80"
+                 alt="Sri Lankan traditional sarees"
+                 class="w-full h-full object-cover rounded-image image-highlight">
+          </div>
+          <div class="category-label">
+            <h3 class="text-lg">Traditional Sarees</h3>
+          </div>
+        </a>
+
+        <!-- Men's Clothing Category -->
+        <a href="mens.html" class="minimal-category h-96">
+          <div class="w-full h-full image-container">
+            <img src="https://images.unsplash.com/photo-1598032895397-b9472444bf93?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80"
+                 alt="Sri Lankan men's traditional clothing"
+                 class="w-full h-full object-cover rounded-image image-highlight">
+          </div>
+          <div class="category-label">
+            <h3 class="text-lg">Men's Collection</h3>
+          </div>
+        </a>
+
+        <!-- Bathik Category -->
+        <a href="bathik.html" class="minimal-category极 h-96">
+          <div class="w-full h-full image-container">
+            <img src="static/images/Bathik_shirtmain.jpg"
+                 alt="Sri Lankan bathik products"
+                 class="w-full h-full object-cover rounded-image image-highlight">
+          </div>
+          <div class="category-label">
+            <h3 class="text-lg">Bathik Collection</h3>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Products -->
+  <section id="products" class="py-20 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-16">
+        <h2 class="collection-header text-4xl font-normal inline-block font-serif">Featured Products</h2>
+        <p class="text-gray-600 mt-4 max-w-2xl mx-auto">Handpicked treasures from our artisans</p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <!-- Product 1 -->
+        <div class="minimal-product-card" data-id="1" data-name="Premium Batik Shirt" data-price="49.99" data-image="https://images.unsplash.com/photo-1622288432450-277d0b6b1dc6?auto=format&fit=crop&w=400&q=80" data-description="Hand-dyed with traditional patterns">
+          <div class="relative product-image-container">
+            <div class="w-full h-80 flex items-center justify-center bg-white image-container">
+              <img src="static/images/Traditional_shirt_Main.jpg"
+                   alt="Premium Batik Shirt"
+                   class="w-full h-full object-cover rounded-image image-highlight">
+            </div>
+            <button class="add-to-cart-btn" onclick="addToCart('1', 1, {id: '1', name: 'Premium Batik Shirt', price: 49.99, image: 'https://images.unsplash.com/photo-1622288432450-277d0b6b1dc6?auto=format&fit=crop&w=400&q=80', description: 'Hand-dyed with traditional patterns'})">
+              <i class="fas fa-plus text-sri-green"></i>
+            </button>
+          </div>
+          <div class="p-6">
+            <div class="mb-3">
+              <h3 class="font-medium text-lg mb-1">Premium Batik Shirt</h3>
+              <p class="text-sm text-gray-600">Hand-dyed with traditional patterns</p>
+            </div>
+            <p class="text-gray-900 font-medium text-lg mb-4">$49.99</p>
+          </div>
+        </div>
+
+        <!-- Product 2 -->
+        <div class="minimal-product-card" data-id="2" data-name="Batik Sarong" data-price="29.99" data-image="https://images.unsplash.com/photo-1598032895397-b9472444bf93?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80" data-description="Hand-dyed Cotton">
+          <div class="relative product-image-container">
+            <div class="w-full极 h-80 flex items-center justify-center bg-white image-container">
+              <img src="static/images/sarong_main.jpg"
+                   alt="Batik Sarong"
+                   class="w-full h-full object-cover rounded-image image-highlight">
+            </div>
+            <button class="add-to-cart-btn" onclick="addToCart('2', 1, {id: '2', name: 'Batik Sarong', price: 29.99, image: 'https://images.unsplash.com/photo-1598032895397-b9472444bf93?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8极MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80', description: 'Hand-dyed Cotton'})">
+              <i class="fas fa-plus text-sri-green"></i>
+            </button>
+          </div>
+          <div class="p-6">
+            <div class="mb-3">
+              <h3 class="font-medium text-lg mb-1">Batik Sarong</h3>
+              <p class="text-sm text-gray-600">Hand-dyed Cotton</p>
+            </div>
+            <p class="text-gray-900 font-medium text-lg mb-4">$29.99</p>
+          </div>
+        </div>
+
+        <!-- Product 3 -->
+        <div class="minimal-product-card" data-id="3" data-name="Handloom Shawl" data-price="45.99" data-image="static/images/images.jpeg" data-description="Pure cotton weave with traditional patterns">
+          <div class="relative product-image-container">
+            <div class="w-full h-80 flex items-center justify-center bg-white image-container">
+              <img src="static/images/sareemain1.jpeg"
+                   alt="Handloom Shawl"
+                   class="w-full h-full object-cover rounded-image image-highlight">
+            </div>
+            <button class="add-to-cart-btn" onclick="addToCart('3', 1, {id: '3', name: 'Handloom Shawl', price: 45.99, image: 'https://images.unsplash.com/photo-1610526668905-2f6a4a0f1b2e?auto=format&fit=crop&w=400&q=80', description: 'Pure cotton weave with traditional patterns'})">
+              <i class="fas fa-plus text-sri-green"></i>
+            </button>
+          </div>
+          <div class="p-6">
+            <div class="mb-3">
+              <h3 class="font-medium text-lg mb-1">Handloom Shawl</h3>
+              <p class="text-sm text-gray-600">Pure cotton weave with traditional patterns</p>
+            </div>
+            <p class="text-gray-900 font-medium text-lg mb-4">$45.99</p>
+          </div>
+        </div>
+
+        <!-- Product 4 -->
+        <div class="minimal-product-card" data-id="4" data-name="Batik Shirt" data-price="39.99" data-image="https://images.unsplash.com/photo-1598032895397-b9472444bf93?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80" data-description="Traditional Design">
+          <div class="relative product-image-container">
+            <div class="w-full h-80 flex items-center justify-center bg-white image-container">
+              <img src="https://images.unsplash.com/photo-1598032895397-b9472444bf93?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=c极rop&w=400&q=80"
+                   alt="Batik Shirt"
+                   class="w-full h-full object-cover rounded-image image-highlight">
+            </div>
+            <button class="add-to-cart-btn" onclick="addToCart('4', 1, {id: '4', name: 'Batik Shirt', price: 39.99, image: 'https://images.unsplash.com/photo-1598032895397-b9472444bf93?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80', description: 'Traditional Design'})">
+              <i class="fas fa-plus text-sri-green"></i>
+            </button>
+          </div>
+          <div class="p-6">
+            <div class="mb-3">
+              <h3 class="font-medium text-lg mb-1">Batik Shirt</h3>
+              <p class="text-sm text-gray-600">Traditional Design</p>
+            </div>
+            <p class="text-gray-900 font-medium text-lg mb-4">$39.99</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center mt-16">
+        <a href="#" class="bg-sri-green text-white px-8 py-3 rounded-sm inline-block font-medium">View All Products</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Bathik Section -->
+  <section id="bathik" class="py-20">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-16">
+        <h2 class="collection-header text-4xl font-normal inline-block font-serif">Bathik Collection</h2>
+        <p class="text-gray-600 max-w-2xl mx-auto mt-4">Traditional techniques passed down through generations of Sri Lankan artisans</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+        <div>
+          <div class="w-full h-[500px] flex items-center justify-center bg-gray-50 image-container">
+            <img src="static/images/handloom_picM.jpg"
+                 alt="Handloom Craftsmanship"
+                 class="w-full h-full object-cover rounded-image image-highlight">
+          </div>
+        </div>
+
+        <div class="flex flex-col justify-center">
+          <h3 class="text-2xl font-serif font-normal mb-6">Artisanal Weaving Heritage</h3>
+          <p class="text-gray-600 mb-6">Our bathik collection represents centuries-old Sri Lankan weaving traditions. Each piece is meticulously crafted by skilled artisans using natural fibers and traditional techniques.</p>
+          <p class="text-gray-600 mb-8">From intricate table runners to elegant shawls, every item tells a story of cultural heritage and sustainable craftsmanship.</p>
+          <div>
+            <a href="bathik.html" class="bg-sri-green text-white px-8 py-3 rounded-sm inline-block font-medium">Explore Collection</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Our Story -->
+  <section id="about" class="py-20 bg-gray-50">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        <div>
+          <h2 class="text-3xl font-serif font-normal mb-8">Our Sri Lankan Heritage</h2>
+          <p class="mb-6 text-gray-600">Founded in 2010, Lanka Bazaar began as a small initiative to support rural artisans in Sri Lanka. Today, we work with over 200 craftsmen across the island, preserving traditional techniques while providing sustainable livelihoods.</p>
+          <p class="mb-8 text-gray-600">Each product tells a story - from the intricate hand-weaving of sarees to the careful crafting of handloom fabrics. We're committed to authenticity, quality, and ethical practices in everything we do.</p>
+          <div class="flex items-center space-x-8">
+            <div class="极flex items-center">
+              <div class="w-10 h-10 rounded-full border border-sri-green flex items-center justify-center mr-3">
+                <i class="fas fa-hands-helping text-sri-green"></i>
+              </div>
+              <div>
+                <p class="font-medium">Ethically Sourced</p>
+              </div>
+            </div>
+            <div class="flex items-center">
+              <div class="w-10 h-10 rounded-full border border-sri-green flex items-center justify-center mr-3">
+                <i class="fas fa-award text-sri-green"></i>
+              </div>
+              <div>
+                <p class="font-medium">Handcrafted</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="w-full h-96 flex items-center justify-center bg-gray-100 rounded-image overflow-hidden image-container">
+            <img src="https://images.unsplash.com/photo-1598032895397-b9472444bf93?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80"
+                 alt="Artisan at work"
+                 class="w-full h-full object-cover rounded-image image-highlight">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Newsletter -->
+  <section class="py-16 bg-sri-green text-white">
+    <div class="max-w-4xl mx-auto px-6 text-center">
+      <h2 class="text-3极xl font-serif font-normal mb-4">Join Our Community</h2>
+      <p class="text-lg mb-8 max-w-2xl mx-auto">Subscribe to receive exclusive offers, artisan stories, and early access to new collections</p>
+      <div class="flex flex-col sm:flex-row gap-4极 justify-center">
+        <input type="email" placeholder="Your email address" class="px-4 py-3 w-full sm:w-96 rounded-sm text-gray-800">
+        <button class="bg-sri-gold text-sri-green px-8 py-3 rounded-sm font-medium">Subscribe</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Minimal Footer -->
+  <footer id="contact" class="py-16 bg-gray-100">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-10">
+        <div>
+          <div class="flex items-center mb-6">
+            <div class="w-10 h-10 rounded-full bg-sri-green flex items-center justify-center mr-3">
+              <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='极0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%23d4af37'/%3E%3Cpath d='M30,40 L50,20 L70,40 L60,50 L70,60 L50,80 L30,60 L40,50 Z' fill='%231a5d1a'/%3极E%3C/svg%3E"
+                   alt="Lanka Bazaar Logo" class="w-6 h-6" />
+            </div>
+            <h3 class="text-lg font-bold">LANKA BAZAAR</h3>
+          </div>
+          <p class="text-gray-600 mb-6">Bringing authentic Sri Lankan craftsmanship to the world since 2010.</p>
+          <div class="flex space-x-4">
+            <a href="#" class="text-gray-500 hover:text-sri-green">
+              <i class="fab fa-facebook-f"></i>
+            </a>
+            <a href="#" class="text-gray-500 hover:text-sri-green">
+              <i class="fab fa-instagram"></i>
+            </a>
+            <a href="#" class="text-gray-500 hover:text-sri-green">
+              <i class="fab fa-pinterest"></i>
+            </a>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-base mb-5">Shop</h4>
+          <ul class="space-y-3 text-gray-600">
+            <li><a href="womens.html" class="hover:text-sri-green">Women's Collection</a></li>
+            <li><a href="mens.html" class="hover:text-sri-green">Men's Collection</a></li>
+            <li><a href="bathik.html" class="hover:text-sri-green">Bathik Collection</a></li>
+            <li><a href="#" class="hover:text-sri-green">New Arrivals</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-base mb-5">Information</h4>
+          <ul class="space-y-3 text-gray-600">
+            <li><a href="#about" class="hover:text-sri-green">About Us</a></li>
+            <li><a href="#" class="hover:text-sri-green">Shipping Policy</a></li>
+            <li><a href="#" class="hover:text-sri-green">Returns & Exchanges</a></li>
+            <li><a href="#" class="hover:text-sri-green">Privacy Policy</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-base mb-5">Contact</h4>
+          <ul class="space-y-3 text-gray-600">
+            <li class="flex items-start">
+              <i class="fas fa-map-marker-alt mt-1 mr-3"></i>
+              <span>123 Heritage Lane, Colombo, Sri Lanka</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fas fa-phone-alt mt-1 mr-3"></i>
+              <span>+94 112 345 678</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fas fa-envelope mt-1 mr-3"></i>
+              <span>hello@lankabazaar.com</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="border-t border-gray-200 mt-14 pt-8 text-center text-gray-500">
+        <p>© 2025 Lanka Bazaar. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Load scripts first -->
+  <script src="product.js"></script>
+  <script src="cart.js"></script>
+
+  <script>
+    // Toast notification
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.querySelector('span').textContent = message;
+      toast.classList.add('show');
+
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    // Add to cart functionality for product cards
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize cart using the unified system
+      if (typeof initCart === 'function') {
+        initCart();
+      }
+
+      document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+        button.addEventListener('click', function(e) {
+          e.preventDefault();
+          const productCard = this.closest('.minimal-product-card');
+
+          const product = {
+            id: productCard.dataset.id,
+            name: productCard.dataset.name,
+            price: parseFloat(productCard.dataset.price),
+            image: productCard.dataset.image,
+            description: productCard.dataset.description
+          };
+
+          // Use the unified addToCart function
+          addToCart(product.id, 1, product);
+
+          showToast(`${product.name} added to cart!`);
+
+          // Visual feedback
+          const originalHTML = this.innerHTML;
+          this.innerHTML = '<i class="fas fa-check text-sri-green"></i>';
+          setTimeout(() => {
+            this.innerHTML = originalHTML;
+          }, 1000);
+        });
+      });
+
+      // Header scroll effect
+      window.addEventListener('scroll', function() {
+        const header = document.getElementById('main-header');
+        if (window.scrollY > 50) {
+          header.classList.remove('transparent-header');
+          header.classList.add('scrolled-header');
+        } else {
+          header.classList.remove('scrolled-header');
+          header.classList.add('transparent-header');
+        }
+      });
+
+      // Search toggle functionality
+      const searchToggle = document.getElementById('search-toggle');
+      const searchInput = document.querySelector('.search-input');
+
+      if (searchToggle && searchInput) {
+        searchToggle.addEventListener('click', function() {
+          searchInput.classList.toggle('active');
+          if (searchInput.classList.contains极('active')) {
+            searchInput.focus();
+          }
+        });
+
+        // Close search when clicking outside
+        document.addEventListener('click', function(e) {
+          if (!searchInput.contains(e.target) && !searchToggle.contains(e.target)) {
+            searchInput.classList.remove('active');
+          }
+        });
+      }
+
+      // Carousel functionality
+      let currentSlide = 0;
+      const slides = document.querySelectorAll('.carousel-slide');
+      const totalSlides = slides.length;
+      const indicators = document.querySelectorAll('.carousel-indicator');
+
+      function showSlide(index) {
+        // Hide all slides
+        slides.forEach(slide => slide.classList.remove('active'));
+        indicators.forEach(indicator => indicator.classList.remove('active'));
+
+        // Show the current slide
+        slides[index].classList.add('active');
+        indicators[index].classList.add('active');
+
+        currentSlide = index;
+      }
+
+      // Next slide
+      const nextButton = document.querySelector('.carousel-next');
+      if (nextButton) {
+        nextButton.addEventListener('click', () => {
+          const nextSlide = (currentSlide + 1) % totalSlides;
+          showSlide(nextSlide);
+        });
+      }
+
+      // Previous slide
+      const prevButton = document.querySelector('.carousel-prev');
+      if (prevButton) {
+        prevButton.addEventListener('click', () => {
+          const prevSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+          showSlide(prevSlide);
+        });
+      }
+
+      // Indicator clicks
+      indicators.forEach((indicator, index) => {
+        indicator.addEventListener('click', () => {
+          showSlide(index);
+        });
+      });
+
+      // Auto-advance every 5 seconds
+      setInterval(() => {
+        const nextSlide = (currentSlide + 1) % totalSlides;
+        showSlide(nextSlide);
+      }, 5000);
+
+      // Initialize first slide
+      showSlide(0);
+    });
+  </script>
+
+</body>
+</html>
